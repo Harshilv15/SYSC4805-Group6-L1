@@ -1,0 +1,8 @@
+Vision sensors, which are viewable objects, will be used to render the path objects in the field of view and trigger detection when robot reaches the black path. 
+Vision sensors were chosen over proximity sensors for the black path detection as color plays a role in the detection process, which favors vision sensor’s ability. 
+The vision sensor’s image content will be accessed via the API to route the robot back in the path scene when on the black path region.
+
+Proximity sensors would be used for obstacle detection to allow for the distinguishing of snow entities. 
+Proximity sensors were chosen over vision sensors due to the functionality that allows for the detection of detectable entities (snow). 
+The sensor’s detection functionality will be used in accordance with the snow plow to clear snow off path. 
+ 

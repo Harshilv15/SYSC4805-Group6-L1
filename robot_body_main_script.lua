@@ -17,6 +17,8 @@ function sysCall_init()
     rearLeftJoint=sim.getObjectHandle("RearLeftJoint")
     
     frontProximitySensor=sim.getObjectHandle("FrontProximitySensor")
+    leftProximitySensor=sim.getObjectHandle("LeftProximitySensor")
+    rightProximitySensor=sim.getObjectHandle("RightProximitySensor")
     
     nominalLinearVelocity=2
     wheelRad=1
@@ -40,7 +42,7 @@ end
 function coroutineMain()
     -- Put some initialization code here
     while true do
-        -- Logic for path detection
+        ----- Logic for path detection -----
         backSensorReading={false,false,false}
         for i=1,3,1 do
         result,data=sim.readVisionSensor(backVisionSensor[i])
@@ -63,24 +65,32 @@ function coroutineMain()
             settingVelocity(LeftV,RightV)
         end
         
-        -- Logic for Obstacle Detection
+        ----- Logic for Obstacle Detection -----
         
         -- Check Front Sensor
-        result=sim.readProximitySensor(frontProximitySensor)
-        if(result==1)then
-            print("Obstacle Detected")
+        frontResult=sim.readProximitySensor(frontProximitySensor)
+        leftResult=sim.readProximitySensor(leftProximitySensor)
+        rightResult=sim.readProximitySensor(rightProximitySensor)
+        if(frontResult==1) and (leftResult==1) then
+            -- Obstacle detected on front left, turn right
+            print("Obstacle Detected on front left")
             LeftV=6
             RightV=-2
+        elseif (frontResult==1) and (rightResult==1) then
+            -- Obstacle detected on front right, turn left
+            print("Obstacle Detected on front right")
+            LeftV=-2
+            RightV=6
+        elseif (frontResult==1) then
+            -- Default case, turn right
+            print("Obstacle Detected in front")
+            LeftV=6
+            RightV=-2
+        else
             settingVelocity(LeftV,RightV)
-            sim.wait(0.5, false)
         end
-        --while (result==0)do
-            --sim.wait(0.1, false)
-            --result=sim.readProximitySensor(leftProximitySensor)
-        --end
-        --if (result==1)then
-            --print("Obstacle Detected 1")
-        --end
+        settingVelocity(LeftV,RightV)
+        sim.wait(0.5, false)
     end
 end
 
